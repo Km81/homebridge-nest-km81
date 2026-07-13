@@ -1,0 +1,83 @@
+{
+  "pluginAlias": "NestKm81",
+  "pluginType": "platform",
+  "singular": true,
+  "headerDisplay": "Google **SDM(Smart Device Management) 공식 API**로 Nest 온도조절기를 연결합니다. 브라우저 쿠키 취출 없음 — refresh token이 자동 갱신되어 토큰 만료로 손댈 일이 없습니다. 자격증명 4개는 Google Cloud OAuth 클라이언트와 Device Access 프로젝트에서 가져옵니다.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "플랫폼 이름",
+        "type": "string",
+        "default": "Nest KM81"
+      },
+      "clientId": {
+        "title": "OAuth Client ID",
+        "type": "string",
+        "required": true,
+        "description": "Google Cloud 콘솔 → API 및 서비스 → 사용자 인증 정보의 OAuth 2.0 클라이언트 ID"
+      },
+      "clientSecret": {
+        "title": "OAuth Client Secret",
+        "type": "string",
+        "required": true
+      },
+      "refreshToken": {
+        "title": "Refresh Token",
+        "type": "string",
+        "required": true,
+        "description": "PCM 승인(https://nestservices.google.com/partnerconnections/<projectId>/auth) 후 코드를 토큰으로 교환해 얻은 refresh_token"
+      },
+      "projectId": {
+        "title": "Device Access Project ID",
+        "type": "string",
+        "required": true,
+        "description": "Device Access 콘솔(https://console.nest.google.com/device-access)의 프로젝트 ID (UUID 형식)"
+      },
+      "pollingInterval": {
+        "title": "폴링 주기 (초)",
+        "type": "integer",
+        "default": 30,
+        "minimum": 15,
+        "description": "SDM 쿼터(분당 10회) 고려 — 기본 30초 권장. Pub/Sub 사용 시 폴링은 보정(reconciliation) 역할."
+      },
+      "enablePubSub": {
+        "title": "Pub/Sub 실시간 이벤트",
+        "type": "boolean",
+        "default": true,
+        "description": "Nest 앱·HA 등 외부 변경을 1~2초 내 반영. cloudProjectId 필요."
+      },
+      "cloudProjectId": {
+        "title": "Google Cloud 프로젝트 ID",
+        "type": "string",
+        "description": "Pub/Sub용 (예: my-nest-project-12345). 비우면 폴링만 사용."
+      },
+      "pubsubSubscription": {
+        "title": "Pub/Sub 구독 이름",
+        "type": "string",
+        "default": "homebridge-nest-km81-sub",
+        "description": "이 플러그인 전용 구독 — HA 구독과 공유 금지(메시지를 서로 뺏어감)."
+      },
+      "nameOverride": {
+        "title": "온도조절기 이름 (선택)",
+        "type": "string",
+        "description": "비우면 Nest에 설정된 이름/방 이름을 사용"
+      },
+      "showEcoSwitch": {
+        "title": "에코 모드 토글 표시",
+        "type": "boolean",
+        "default": true,
+        "description": "보일러 액세서리 안에 에코 ON/OFF 토글을 표시합니다 (별도 액세서리 아님)."
+      }
+    },
+    "required": ["clientId", "clientSecret", "refreshToken", "projectId"]
+  },
+  "layout": [
+    { "type": "fieldset", "title": "자격증명 (Google SDM)", "items": [
+      "clientId", "clientSecret", "refreshToken", "projectId"
+    ] },
+    { "type": "fieldset", "title": "동작", "expandable": true, "expanded": false, "items": [
+      "pollingInterval", "enablePubSub", "cloudProjectId", "pubsubSubscription", "showEcoSwitch", "nameOverride", "name"
+    ] }
+  ]
+}
