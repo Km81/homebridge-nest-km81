@@ -80,6 +80,7 @@ class NestKm81Platform {
     while (!this._shutdown) {
       try {
         await this.discover();
+        if (attempt > 0) this.log.info(`기기 검색 성공 — ${attempt}회 실패 후 복구`);
         return;
       } catch (e) {
         attempt++;
