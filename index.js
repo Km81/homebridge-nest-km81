@@ -96,6 +96,11 @@ class NestKm81Platform {
 
     const thermostats = (devices || []).filter((d) => d.type === 'sdm.devices.types.THERMOSTAT');
     if (!thermostats.length) {
+      // v2.1.1 — 캐시 액세서리가 있는데 0대면(권한 전파 지연·일시 빈 응답) 그대로 끝내면
+      // 핸들러 없는 좀비로 재시작 전까지 방치됨 → throw로 _discoverLoop 재시도 유도
+      if (this.accessories.size > 0) {
+        throw new Error('THERMOSTAT 0대 응답 (캐시 액세서리 존재 — 일시 응답으로 보고 재시도)');
+      }
       this.log.warn('THERMOSTAT 기기를 찾지 못했습니다. (Device Access 권한/승인 확인)');
     }
 
