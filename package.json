@@ -1,6 +1,6 @@
 {
   "name": "homebridge-nest-km81",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Nest Thermostat Homebridge plugin using the official Google SDM API. Auto-refreshing OAuth — no cookie extraction, no token expiry chores.",
   "main": "index.js",
   "engines": {

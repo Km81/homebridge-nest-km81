@@ -85,7 +85,10 @@ class NestKm81Platform {
       } catch (e) {
         attempt++;
         const delay = Math.min(attempt * 5000, DISCOVER_RETRY_MAX_DELAY_MS);
-        this.log.warn(`기기 검색 실패 (${attempt}회): ${e.message || e} — ${Math.round(delay / 1000)}초 후 재시도`);
+        // v2.1.2 — 첫 회 + 매 10회만 warn (장기 인터넷 장애 중 무한 warn 방지), 나머지 debug
+        const msg = `기기 검색 실패 (${attempt}회): ${e.message || e} — ${Math.round(delay / 1000)}초 후 재시도`;
+        if (attempt === 1 || attempt % 10 === 0) this.log.warn(msg);
+        else this.log.debug(msg);
         await new Promise((r) => setTimeout(r, delay));
       }
     }
